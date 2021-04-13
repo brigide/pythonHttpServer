@@ -1,4 +1,5 @@
 from socket import *
+from serverController import routes, methodHandler, requestHandler
 
 serverPort = 8081
 serverSocket = socket(AF_INET, SOCK_STREAM)
@@ -12,27 +13,19 @@ while True:
 
     request = connectionSocket.recv(1024).decode()
 
-    headers = request.split('\n')
-    filename = headers[0].split()[1]
-    method = headers[0].split()[0]
+    headers, url, method, body = requestHandler(request)
+
+    result = methodHandler(method, body)
+    print(headers)
+    print("")
+    print(url)
+    print("")
     print(method)
     print("")
-    print(request)
+    print(body)
 
   
-    if filename == '/':
-        filename = '/index.html'
-    elif filename == '/teste':
-        filename = '/teste.html'
-
-    try:
-        fin = open('pages' + filename)
-        content = fin.read()
-        fin.close()
-
-        response = 'HTTP/1.1 200 OK\n\n' + content
-    except IOError:
-        response = 'HTTP/1.1 404 NOT FOUND\n\nFile Not Found'
+    response = routes(url)
 
     connectionSocket.sendall(response.encode())
 
