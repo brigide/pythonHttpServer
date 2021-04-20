@@ -1,9 +1,9 @@
 def routes(url):
-
+    subUrl = url.split('?') 
     if url == '/':
         filename = '/index.html'
 
-    elif url == '/test':
+    elif subUrl[0] == '/test':
         filename = '/teste.html'
 
     else:
@@ -24,7 +24,9 @@ def routes(url):
 
 def requestHandler(request):
     headers = request.split('\n') 
-    url = headers[0].split()[1]  
+    url = headers[0].split()[1] 
+    subUrl = url.split('?') 
+    print("sub: ", subUrl)
     method = headers[0].split()[0]
     body = headers[-1].split('&')
     for i in range(0, len(body)):

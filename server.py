@@ -6,7 +6,7 @@ serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(("0.0.0.0", serverPort))
 serverSocket.listen(1)
 
-print("Servidor iniciado")
+print("Server listening on port")
 
 while True:
     connectionSocket, addr = serverSocket.accept()
