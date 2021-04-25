@@ -1,0 +1,12 @@
+[
+    {
+        "name": "John",
+        "address": "221B Baker Street",
+        "phone": "1"
+    },
+    {
+        "name": "Elis",
+        "address": "Some Street, 123",
+        "phone": "2"
+    }
+]
