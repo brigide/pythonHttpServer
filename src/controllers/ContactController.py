@@ -1,5 +1,7 @@
 from src.models.Contact import Contact
 from src.models.ContactRepository import ContactRepository
+from src.views import contacts as contactTemplate
+from src.views import error as errorTemplate
 import json 
 class ContactController:
     Repository = ContactRepository()
@@ -9,8 +11,19 @@ class ContactController:
 
 
     def index(self):
+        #contactRepository returns all contacts from the json
         contactRepository = self.Repository.fetchAllContacts()
-        return contactRepository, 'HTTP/1.1 200 OK', '/contacts.html'
+        contactString = ''
+        for contact in contactRepository:
+            string = f''' 
+            <pre>Name: {contact['name']}
+            Phone: {contact['phone']}
+            Address: {contact['address']}</pre>
+            <br/>
+            '''
+            contactString = contactString + string
+        #then we send the json data with the http status code and the html string returned by src/views/contacts.py
+        return contactRepository, 'HTTP/1.1 200 OK', contactTemplate.displayPage(contactString) 
 
 
     def show(self,phone):
@@ -19,7 +32,7 @@ class ContactController:
         if contact == None:
             return "Contact not found", 'HTTP/1.1 404 NOT FOUND', '/error.html'
 
-        return contact, 'HTTP/1.1 200 OK', '/contact.html'
+        return contact, 'HTTP/1.1 200 OK', contactTemplate.displayPage(contact)
 
 
     def create(self,name, address, phone):
@@ -48,4 +61,8 @@ class ContactController:
 
         self.Repository.deleteContact(phone)
         return 'HTTP/1.1 200 OK', '/contacts.html'
+
+
+    def error(self):
+        return 'HTTP/1.1 404 NOT FOUND', errorTemplate.displayPage()
 

@@ -1,10 +1,11 @@
 
 def requestHandler(request):
-
     headers = request.split('\n') 
 
-    url = headers[0].split()[1] 
-
+    if isinstance(headers, list):
+        url = headers[0].split()[1] 
+    else:
+        return '','','','',''
     params = url.split('?')
 
     url = params[0]

@@ -1,7 +1,5 @@
 import sys 
 
-sys.path.append('src')
-
 from src.models.Contact import Contact 
 from src.models.ContactRepository import ContactRepository
 
