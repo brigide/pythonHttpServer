@@ -12,7 +12,7 @@ def displayPage(contact):
                 </body>
             </html>
             <script type="text/javascript">
-            document.getElementById("button_create").onclick = function () {{location.href = "error";}};
+            document.getElementById("button_create").onclick = function () {{location.href = "createContact";}};
             document.getElementById("button_delete").onclick = function () {{location.href = "error";}};
             </script>
         """)

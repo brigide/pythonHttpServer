@@ -1,7 +1,7 @@
 from src.controllers.ContactController import ContactController
+
 def routes(url, params, method, body):
     contactController = ContactController()
-
 
     if method == 'GET':
 
@@ -17,14 +17,25 @@ def routes(url, params, method, body):
                     status, page = contactController.error()
             else: # This triggers if there's no query parameter even though there's a '?' in the URL
                 status, page = contactController.error()
-        else: # This triggers if the route is not '/contacts'
+        
+        elif url == '/createContact':
+            status, page = contactController.showCreatePage()
+        else: # This triggers if the route doesn't exists
             status, page = contactController.error()
 
 
     elif method == 'POST':
         if url == '/contacts':
-            print(body)
-            status, page = contactController.create(body)
+            body = body.split('&') # Fetch the body data, contains both key and values
+            bodyValues = [] # Empty list used to store the values
+            for param in body: # filter the values
+                param = param.split('=')
+                bodyValues.append(param[1])
+
+            # bodyValues[0] = name, bodyValues[1] = phone, bodyValues[2] = address
+            status, page = contactController.create(bodyValues[0], bodyValues[1], bodyValues[2])
+        else:
+            status, page = contactController.index()
 
     elif method == 'PUT':
         if url == '/contacts':
@@ -33,8 +44,7 @@ def routes(url, params, method, body):
 
     elif method == 'DELETE':
         if len(params) == 1 and url == '/contacts':
-            status = 'HTTP/1.1 400 NOT FOUND'
-            page = '/error.html'
+            status, page = contactController.error()
  
         elif len(params) > 1 and url == '/contacts':
             param = params[1].split('=')
@@ -44,8 +54,7 @@ def routes(url, params, method, body):
 
 
     else:
-        status = 'HTTP/1.1 404 NOT FOUND'
-        page = '/error.html'
+        status, page = contactController.error()
 
 
     try:
@@ -53,16 +62,14 @@ def routes(url, params, method, body):
         #content = fin.read()
         #fin.close()
         #response = status + '\n\n' + content
-
-        content = '<html>\n<head>\n    <title>Contatos</title>\n</head>\n<body>\n  <h1>File Not Found</h1>\n</body>\n</html>'
  
-
+        
         response = status + '\n\n' + page
     except IOError:
-        fin = open('src/views/error.html')
-        content = fin.read()
-        fin.close()
-        print(content)
-        response = 'HTTP/1.1 404 NOT FOUND\n\n' + content
+        #fin = open('src/views/error.html')
+        #content = fin.read()
+        #fin.close()
+        
+        response = status + page
 
     return response

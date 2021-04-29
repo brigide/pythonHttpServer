@@ -1,7 +1,6 @@
 
 def requestHandler(request):
     headers = request.split('\n') 
-
     if isinstance(headers, list):
         url = headers[0].split()[1] 
     else:
@@ -14,7 +13,6 @@ def requestHandler(request):
 
 
     body = headers[-1]#.split('&')
-    print(body)
     #for i in range(0, len(body)):
         #body[i] = str(body[i])
 

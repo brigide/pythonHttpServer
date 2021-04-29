@@ -13,7 +13,6 @@ while True:
     connectionSocket, addr = serverSocket.accept()
 
     request = connectionSocket.recv(1024).decode()
-
     headers, url, params, method, body = requestHandler(request)
 
     print(headers)

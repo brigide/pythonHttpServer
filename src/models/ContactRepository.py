@@ -27,7 +27,9 @@ class ContactRepository:
 
 
     def saveContact(self,contact):
+        contact = contact.getContact()
         with open("src/data/contacts.json", "r") as file:
+            print(contact)
             data = json.load(file) # Reads the data from the .json
             data.append(contact) # data is a json converted to dict, here the new contact is appended
 

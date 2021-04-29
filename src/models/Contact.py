@@ -5,6 +5,8 @@ class Contact:
         self.address = address
         self.phone = phone
 
+
+
     def getContact(self):
         contact = {
             "name": self.name,
@@ -12,6 +14,8 @@ class Contact:
             "phone": self.phone
         }
         return contact
+
+
 
     @property           
     def name(self): 

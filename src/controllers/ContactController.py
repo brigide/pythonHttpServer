@@ -1,6 +1,7 @@
 from src.models.Contact import Contact
 from src.models.ContactRepository import ContactRepository
 from src.views import contacts as contactTemplate
+from src.views import contactCreation as creatContactTemplate
 from src.views import error as errorTemplate
 import json 
 class ContactController:
@@ -34,15 +35,30 @@ class ContactController:
 
         return contact, 'HTTP/1.1 200 OK', contactTemplate.displayPage(contact)
 
+    
+    def showCreatePage(self):
+        return 'HTTP/1.1 200 OK', creatContactTemplate.displayPage()
+
 
     def create(self,name, address, phone):
         contact = Contact(name, address, phone)
 
-        if self.Repository.findByPhone(contact.getPhone()) != None:
-            return 'HTTP/1.1 400 BAD REQUEST', '/error.html'
+        if self.Repository.findByPhone(contact.phone) != None:
+            self.error()
         
         self.Repository.saveContact(contact)
-        return 'HTTP/1.1 201 CREATED', '/contact.html'
+
+        contactRepository = self.Repository.fetchAllContacts()
+        contactString = ''
+        for contact in contactRepository:
+            string = f''' 
+            <pre>Name: {contact['name']}
+            Phone: {contact['phone']}
+            Address: {contact['address']}</pre>
+            <br/>
+            '''
+            contactString = contactString + string
+        return 'HTTP/1.1 201 CREATED', contactTemplate.displayPage(contactString) 
 
 
     def update(self,name, address, phone):
