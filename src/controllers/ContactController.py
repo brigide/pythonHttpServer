@@ -1,8 +1,5 @@
 from src.models.Contact import Contact
 from src.models.ContactRepository import ContactRepository
-from src.views import contacts as contactTemplate
-from src.views import contactCreation as creatContactTemplate
-from src.views import error as errorTemplate
 import json 
 class ContactController:
     Repository = ContactRepository()
@@ -12,33 +9,46 @@ class ContactController:
 
 
     def index(self):
-        #contactRepository returns all contacts from the json
-        contactRepository = self.Repository.fetchAllContacts()
-        contactString = ''
-        for contact in contactRepository:
-            string = f''' 
-            <pre>Name: {contact['name']}
-            Phone: {contact['phone']}
-            Address: {contact['address']}</pre>
-            <br/>
-            '''
-            contactString = contactString + string
-        #then we send the json data with the http status code and the html string returned by src/views/contacts.py
-        return contactRepository, 'HTTP/1.1 200 OK', contactTemplate.displayPage(contactString) 
+        return 'HTTP/1.1 200 OK', '/contacts.html'
 
+    #getAllContacts returns the data that must be displayed on the index
+    def getContacts(self, search):
+        if (search == ''):
+            contactRepository = self.Repository.fetchAllContacts()
+            contactString = ''
+            for contact in contactRepository:
+                string = f''' 
+                <pre>Name: {contact['name']}
+                Phone: {contact['phone']}
+                Address: {contact['address']}</pre>
+                <a href="/updateContact?phone={contact['phone']}">Update</a>
+                <a href="/deleteContact?phone={contact['phone']}">Delete</a>
+                <br/><br/>
+                '''
 
-    def show(self,phone):
-        contact = self.Repository.findByPhone(phone)
+                contactString = contactString + string
+                contactString = contactString.replace('+', ' ')
+            return 'HTTP/1.1 200 OK', contactString
 
-        if contact == None:
-            return "Contact not found", 'HTTP/1.1 404 NOT FOUND', '/error.html'
-
-        return contact, 'HTTP/1.1 200 OK', contactTemplate.displayPage(contact)
+        
+        else:
+            contact = self.Repository.findByPhone(search)
+            print(contact)
+            if contact == '' or contact == None:
+                return 'HTTP/1.1 200 OK', 'Contact not found'
+            contactString = f''' 
+                <pre>Name: {contact['name']}
+                Phone: {contact['phone']}
+                Address: {contact['address']}</pre>
+                <a href="/updateContact?phone={contact['phone']}">Update</a>
+                <a href="/deleteContact?phone={contact['phone']}">Delete</a>
+                <br/><br/>
+                '''
+            return 'HTTP/1.1 200 OK', contactString
 
     
     def showCreatePage(self):
-        return 'HTTP/1.1 200 OK', creatContactTemplate.displayPage()
-
+        return 'HTTP/1.1 200 OK', '/contactCreation.html'
 
     def create(self,name, address, phone):
         contact = Contact(name, address, phone)
@@ -47,28 +57,23 @@ class ContactController:
             self.error()
         
         self.Repository.saveContact(contact)
-
-        contactRepository = self.Repository.fetchAllContacts()
-        contactString = ''
-        for contact in contactRepository:
-            string = f''' 
-            <pre>Name: {contact['name']}
-            Phone: {contact['phone']}
-            Address: {contact['address']}</pre>
-            <br/>
-            '''
-            contactString = contactString + string
-        return 'HTTP/1.1 201 CREATED', contactTemplate.displayPage(contactString) 
+        _, page = self.index()
+        return 'HTTP/1.1 201 CREATED', page
 
 
-    def update(self,name, address, phone):
+    
+    def showUpdatePage(self): 
+        return 'HTTP/1.1 200 OK', '/contactUpdate.html'
+
+    def update(self,name, address, phone, pastPhone):
         contact = Contact(name, address, phone)
 
-        if self.Repository.findByPhone(contact.getPhone()) == None:
-            return 'HTTP/1.1 404 NOT FOUND', '/error.html'
+        if self.Repository.findByPhone(pastPhone) == None:
+            self.error()
 
-        self.Repository.updateContact(contact.getPhone(), contact)
-        return 'HTTP/1.1 204 No Content', '/contacts.html'
+        self.Repository.updateContact(contact, pastPhone)
+        _, page = self.index()
+        return 'HTTP/1.1 200 OK', page
 
 
     def delete(self,phone):
@@ -80,5 +85,5 @@ class ContactController:
 
 
     def error(self):
-        return 'HTTP/1.1 404 NOT FOUND', errorTemplate.displayPage()
+        return 'HTTP/1.1 404 NOT FOUND', '/error.html'
 

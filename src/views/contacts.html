@@ -1,0 +1,53 @@
+<html>
+
+    <head>
+        <title>Contacts</title>
+    </head>
+
+    <body>
+        <button id="button_home" class="float-left submit-button" >Home</button>
+        <button id="button_create" class="float-left submit-button" >Create new contact</button>
+        <button id="button_search" class="float-left submit-button" >Search contact</button>
+        <p id = "contacts">  <p>
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        function getParameterByName(name, url = window.location.href) {
+            console.log(url)
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        var param = getParameterByName('phone')
+
+        $(document).ready(function(){
+            console.log(param)
+            if (param != '' && param != undefined && param != 'null'){
+                $.get( `http://localhost:8081/getContacts?phone=${param}`, function( data ) {
+                $( ".result" ).html( data );
+                document.getElementById("contacts").innerHTML = data;
+                });
+
+            } else{
+                $.get( "http://localhost:8081/getContacts", function( data ) {
+                $( ".result" ).html( data );
+                document.getElementById("contacts").innerHTML = data;
+                });
+
+            }
+
+        });
+        document.getElementById("button_home").onclick = function () {{location.href = "contacts";}};
+        document.getElementById("button_create").onclick = function () {{location.href = "createContact";}};
+        document.getElementById("button_search").onclick = function () {{location.href = "search";}};
+
+    </script>
+  </body>
+</html>
+
+

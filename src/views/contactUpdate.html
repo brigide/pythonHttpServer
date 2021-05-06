@@ -1,0 +1,48 @@
+<html>
+
+<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#submit').click(  function () {
+                console.log("click");
+                var sendData = $('#data').val();
+
+                $.ajax({
+                    url: 'http://localhost:8081/getContacts',    //Your api url
+                    type: 'PUT',   //type is any HTTP method
+                    data: {
+                        data: sendData
+                    },      //Data as js object
+                    success: function () {
+                    }
+                })
+                ;
+
+            });
+        });
+    </script>
+</head>
+<title>Contact Update</title>
+<body>
+    <h2>Update contact</h2>
+<form>
+    <label for="name">First name:</label><br>
+    <input name="name" type="text" id="name" class="form-control" placeholder="John Watson"><br><br>
+
+    <label for="address">Address:</label><br>
+    <input name="address" type="text" id="address" class="form-control" placeholder="221B Baker Street"><br><br>
+
+    <label for="phone">Phone:</label><br>
+    <input name="phone" type="text" id="phone" class="form-control" placeholder="12345-6789"><br><br>
+
+    <button id="button_update" class="float-left submit-button" >Submit</button>
+</form>
+
+<p>Press submit to Update the contact.</p>
+
+</body>
+
+</html>

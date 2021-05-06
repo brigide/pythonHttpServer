@@ -38,13 +38,13 @@ class ContactRepository:
             file.write(dataString)
 
 
-    def updateContact(self, updatedContact): 
+    def updateContact(self, updatedContact, pastPhone): 
         with open("src/data/contacts.json", "r") as file:
             data = json.load(file) # Reads the data from the .json
     
         lenght = len(data)
         for i in range(lenght): # Search the dict for the desired contact
-            if data[i]['phone'] == updatedContact.phone:
+            if data[i]['phone'] == pastPhone:
                 data[i] = updatedContact.getContact()
 
         with open("src/data/contacts.json", "w") as file:

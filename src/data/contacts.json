@@ -13,5 +13,20 @@
         "name": "Tito",
         "address": "Dartagnan+67",
         "phone": "11984089367"
+    },
+    {
+        "name": "Tiago",
+        "address": "Dartagnan+67",
+        "phone": "11984089367"
+    },
+    {
+        "name": "John+Watson",
+        "address": "221B+Baker+Street",
+        "phone": "12345677"
+    },
+    {
+        "name": "Sherlock",
+        "address": "221B+Baker+Street",
+        "phone": "1235467"
     }
 ]
