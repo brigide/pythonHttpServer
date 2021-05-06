@@ -60,6 +60,7 @@ class ContactRepository:
         for i in range(lenght): # Search the dict for the desired contact
             if data[i]['phone'] == contactPhone:
                 data.pop(i)
+                break
 
         with open("src/data/contacts.json", "w") as file:
             dataString = json.dumps(data, indent = 4)  # Format the data string as a JSOn with indent 4

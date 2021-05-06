@@ -29,6 +29,9 @@ def routes(url, params, method, body):
                 else:
                     status, filename = contactController.error()
 
+        elif url == '/search':
+            status, filename = contactController.showSearchPage()
+
         elif url == '/update': 
             status, filename = contactController.getAllContacts()
 
@@ -37,6 +40,9 @@ def routes(url, params, method, body):
 
         elif '/updateContact' in url:
             status, filename = contactController.showUpdatePage()
+
+        elif url == '/deleteContact':
+            status, filename = contactController.showDeletionPage()
 
         else: # This triggers if the route doesn't exists
             status, filename = contactController.error()
@@ -57,17 +63,19 @@ def routes(url, params, method, body):
 
     elif method == 'PUT':
         if url == '/contacts':
-            #body = body.split('&') # Fetch the body data, contains both key and values
-           # bodyValues = [] # Empty list used to store the values
-           # for param in body: # filter the values
-                #param = param.split('=')
-                #bodyValues.append(param[1])
+            body = body.split('&') # Fetch the body data, contains both key and values
+            bodyValues = [] # Empty list used to store the values
+            for param in body: # filter the values
+                param = param.split('=')
+                bodyValues.append(param[1])
 
-            #query = url.split('=')
-           # pastPhone = query[1]
 
-            # bodyValues[0] = name, bodyValues[1] = phone, bodyValues[2] = address
-            print(body)
+            name = bodyValues[0]
+            address = bodyValues[1]
+            phone = bodyValues[2]
+            pastPhone = bodyValues[3]
+
+            print('TESTE', bodyValues)
             status, filename = contactController.update(bodyValues[0], bodyValues[1], bodyValues[2], pastPhone)
         else:
             status, filename = contactController.index()
@@ -75,14 +83,17 @@ def routes(url, params, method, body):
     
 
     elif method == 'DELETE':
-        if len(params) == 1 and url == '/contacts':
-            status, filename = contactController.error()
+      
  
-        elif len(params) > 1 and url == '/contacts':
-            param = params[1].split('=')
-            if len(param) > 1:
-                if param[0] == 'phone' and param[1] != '':
-                    status, filename = contactController.delete(param[1])
+        if url == '/contacts':
+            body = body.split('&') # Fetch the body data, contains both key and values
+            bodyValues = [] # Empty list used to store the values
+            for param in body: # filter the values
+                param = param.split('=')
+                bodyValues.append(param[1])
+
+
+            status, filename = contactController.delete(bodyValues[0])
 
 
     else:

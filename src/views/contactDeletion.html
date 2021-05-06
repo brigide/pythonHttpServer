@@ -1,0 +1,48 @@
+<html>
+
+<head>
+
+    
+</head>
+<title>Delete Contact</title>
+<body>
+    <h2>Do you really want to delete this contact?</h2>
+
+    <button id="button_refuse" class="float-left submit-button" >No</button>
+    <button id="button_confirm" class="float-left submit-button" >Yes</button>
+
+</body>
+
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+    document.getElementById("button_refuse").onclick = function () {{location.href = "contacts";}};
+
+    function getParameterByName(name, url = window.location.href) {
+    console.log(url)
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    var param = getParameterByName('phone')
+
+    $("#button_confirm").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "DELETE",
+            url: "http://localhost:8081/contacts",
+            data: `phone=${param}`,
+            success: function(result) {
+                window.location.href = "/contacts";
+            },
+            error: function(result) {
+                alert('Something happened while attempting to remove the contact');
+            }
+        });
+    });
+</script>

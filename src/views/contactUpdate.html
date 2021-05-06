@@ -2,33 +2,12 @@
 
 <head>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#submit').click(  function () {
-                console.log("click");
-                var sendData = $('#data').val();
-
-                $.ajax({
-                    url: 'http://localhost:8081/getContacts',    //Your api url
-                    type: 'PUT',   //type is any HTTP method
-                    data: {
-                        data: sendData
-                    },      //Data as js object
-                    success: function () {
-                    }
-                })
-                ;
-
-            });
-        });
-    </script>
+    
 </head>
 <title>Contact Update</title>
 <body>
     <h2>Update contact</h2>
-<form>
+<form id = "form">
     <label for="name">First name:</label><br>
     <input name="name" type="text" id="name" class="form-control" placeholder="John Watson"><br><br>
 
@@ -38,7 +17,7 @@
     <label for="phone">Phone:</label><br>
     <input name="phone" type="text" id="phone" class="form-control" placeholder="12345-6789"><br><br>
 
-    <button id="button_update" class="float-left submit-button" >Submit</button>
+    <button id="submit" class="float-left submit-button" >Submit</button>
 </form>
 
 <p>Press submit to Update the contact.</p>
@@ -46,3 +25,36 @@
 </body>
 
 </html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    function getParameterByName(name, url = window.location.href) {
+    console.log(url)
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    var param = getParameterByName('phone')
+
+    $("#form").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        
+        $.ajax({
+            type: "PUT",
+            url: "http://localhost:8081/contacts",
+            data: form.serialize() + `&pastPhone=${param}`, // serializes the form's elements.
+            success: function(data)
+            {
+                window.location.href = "/contacts";
+            }
+        });
+
+        
+    });
+</script>

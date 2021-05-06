@@ -44,9 +44,13 @@ class ContactController:
                 <a href="/deleteContact?phone={contact['phone']}">Delete</a>
                 <br/><br/>
                 '''
+            contactString = contactString.replace('+', ' ')
             return 'HTTP/1.1 200 OK', contactString
 
     
+    def showSearchPage(self):
+        return 'HTTP/1.1 200 OK', '/contactSearch.html'
+
     def showCreatePage(self):
         return 'HTTP/1.1 200 OK', '/contactCreation.html'
 
@@ -75,9 +79,11 @@ class ContactController:
         _, page = self.index()
         return 'HTTP/1.1 200 OK', page
 
+    def showDeletionPage(self):
+        return 'HTTP/1.1 200 OK', '/contactDeletion.html'
 
     def delete(self,phone):
-        if self.Repository.findByPhone(contact.getPhone()) == None:
+        if self.Repository.findByPhone(phone) == None:
             return 'HTTP/1.1 404 NOT FOUND', '/error.html'
 
         self.Repository.deleteContact(phone)
