@@ -27,7 +27,8 @@ class ContactController:
                 '''
 
                 contactString = contactString + string
-                contactString = contactString.replace('+', ' ')
+                contactString = contactString.replace('+', ' ') # Replace spaces
+                contactString = contactString.replace('%20', ' ') # Replace spaces
             return 'HTTP/1.1 200 OK', contactString
 
         
